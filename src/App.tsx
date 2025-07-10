@@ -15,6 +15,7 @@ function App() {
     const [status, setStatus] = useState<Status>(null)
     const [testContent, setTestContent] = useState()
     const [response, setResponse] = useState<BackendResponse>()
+    const [leg, setLeg] = useState<'left' | 'right'>('left')
 
     const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files![0]
@@ -25,7 +26,7 @@ function App() {
             formData.append('file', uploadedFile)
             try {
                 const response = await fetch(
-                    'http://localhost:8000/analyze/right',
+                    `http://localhost:8000/analyze/${leg}`,
                     {
                         method: 'POST',
                         body: formData,
@@ -58,16 +59,78 @@ function App() {
         }
     }
 
+    const test = () => {
+        console.log(leg)
+        testGet()
+    }
+
     return (
         <div>
-            <h1>Right knee</h1>
+            <div>
+                <h2>Tips</h2>
+                <ul>
+                    <h3>Camera Positioning</h3>
+                    <li>Frame: Include entire bike and body</li>
+                    <li>Height: mid-thigh height </li>
+                    <li>Horizontal angle: camera perpendicular to bike</li>
+                    <li>Vertical angle: camera/lense level with floor</li>
+                    <li>Distance: 6-10ft</li>
+                    <h3>Video</h3>
+                    <li>
+                        Only include footage pedaling as normal (cut out video
+                        of getting on, and off the bike before uploading)
+                    </li>
+                    <li>
+                        No need to pedal slow, pedal as you would normally ride
+                    </li>
+                    <li>Higher fps = better results</li>
+                    <li>5-15s total duration</li>
+                    <h3>Other</h3>
+                    <li>Wear your usual cycling shoes and pants/bibs</li>
+                    <li>Bright lighting</li>
+                    <li>
+                        Select correct leg (upload footage of left and right to
+                        check for inbalances)
+                    </li>
+                    <h3>Optional</h3>
+                    <li>Light, solid color background</li>
+                    <li>Solid color shorts/pants</li>
+                </ul>
+                <h2>Results</h2>
+                <ul>
+                    <li>
+                        Optimal: 140-150° max knee angle, at bottom (6 o'clock)
+                        of pedal stroke
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h3>Select Leg</h3>
+                <label htmlFor='left'>Left</label>
+                <input
+                    type='radio'
+                    id='left'
+                    name='leg'
+                    checked={leg === 'left'}
+                    onChange={() => setLeg('left')}
+                />
+                <label htmlFor='right'>Right</label>
+                <input
+                    type='radio'
+                    id='right'
+                    name='leg'
+                    checked={leg === 'right'}
+                    onChange={() => setLeg('right')}
+                />
+            </div>
+            <button onClick={test}>test</button>
             <input
                 className='upload-input'
                 type='file'
                 onChange={handleFileUpload}
             />
             {file ? (
-                <div>
+                <div className='border'>
                     <h1>Status: {status}</h1>
                     <p>File Name: {file.name}</p>
                     <p>File Size: {(file.size / 1024).toFixed(2)} KB</p>
@@ -76,7 +139,6 @@ function App() {
             ) : (
                 <></>
             )}
-            <button onClick={testGet}>Test GET</button>
             <p>{testContent}</p>
             {response && (
                 <div>

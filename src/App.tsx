@@ -2,9 +2,10 @@
 import { useState, type ChangeEvent } from 'react'
 import './App.css'
 
-type Status = null | 'Uploading...' | 'Success' | 'Error'
+type Status = null | 'Uploading...' | 'Success' | 'Error' | 'Awaiting Upload'
 type BackendResponse = {
     max_knee_angle: number
+    average_largest_knee_angles: number
     frames_analyzed: number
     image_base64: string
     video_base64: string
@@ -13,20 +14,29 @@ type BackendResponse = {
 function App() {
     const [file, setFile] = useState<File | null>(null)
     const [status, setStatus] = useState<Status>(null)
-    const [testContent, setTestContent] = useState()
+    const [testContent, setTestContent] = useState<any>()
     const [response, setResponse] = useState<BackendResponse>()
-    const [leg, setLeg] = useState<'left' | 'right'>('left')
+    const [leg, setLeg] = useState<'left' | 'right' | null>(null)
+    const [orientation, setOrientation] = useState<
+        'portrait' | 'landscape' | null
+    >(null)
 
-    const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files![0]
         if (uploadedFile) {
-            setStatus('Uploading...')
             setFile(uploadedFile)
+            setStatus('Awaiting Upload')
+        }
+    }
+
+    const handleFileUpload = async () => {
+        if (file) {
+            setStatus('Uploading...')
             const formData = new FormData()
-            formData.append('file', uploadedFile)
+            formData.append('file', file)
             try {
                 const response = await fetch(
-                    `http://localhost:8000/analyze/${leg}`,
+                    `http://localhost:8000/analyze?leg=${leg}&orientation=${orientation}`,
                     {
                         method: 'POST',
                         body: formData,
@@ -56,12 +66,13 @@ function App() {
             }
         } catch (e) {
             console.log('error fetching test get', e)
+            setTestContent('Error connecting to backend...')
         }
     }
 
     const test = () => {
-        console.log(leg)
         testGet()
+        console.log(leg)
     }
 
     return (
@@ -104,31 +115,62 @@ function App() {
                     </li>
                 </ul>
             </div>
-            <div>
-                <h3>Select Leg</h3>
-                <label htmlFor='left'>Left</label>
-                <input
-                    type='radio'
-                    id='left'
-                    name='leg'
-                    checked={leg === 'left'}
-                    onChange={() => setLeg('left')}
-                />
-                <label htmlFor='right'>Right</label>
-                <input
-                    type='radio'
-                    id='right'
-                    name='leg'
-                    checked={leg === 'right'}
-                    onChange={() => setLeg('right')}
-                />
+            <div className='border'>
+                <div>
+                    <h3>Select Leg</h3>
+                    <label htmlFor='left'>Left</label>
+                    <input
+                        type='radio'
+                        id='left'
+                        name='leg'
+                        onChange={() => setLeg('left')}
+                    />
+                    <label htmlFor='right'>Right</label>
+                    <input
+                        type='radio'
+                        id='right'
+                        name='leg'
+                        onChange={() => setLeg('right')}
+                    />
+                </div>
+                <div>
+                    <h3>Select Video Orientation</h3>
+                    <label htmlFor='portrait'>Portrait</label>
+                    <input
+                        type='radio'
+                        id='portrait'
+                        value='portrait'
+                        name='orientation'
+                        onChange={() => setOrientation('portrait')}
+                    />
+                    <label htmlFor='landscape'>Landscape</label>
+                    <input
+                        type='radio'
+                        id='landscape'
+                        value='landscape'
+                        name='orientation'
+                        onChange={() => setOrientation('landscape')}
+                    />
+                </div>
+                <button onClick={test}>test</button>
+                {status !== 'Uploading...' && (
+                    <input
+                        className='upload-input'
+                        type='file'
+                        onChange={handleFileSelect}
+                    />
+                )}
+                <button
+                    disabled={
+                        !orientation ||
+                        !file ||
+                        !leg ||
+                        status === 'Uploading...'
+                    }
+                    onClick={handleFileUpload}>
+                    Upload
+                </button>
             </div>
-            <button onClick={test}>test</button>
-            <input
-                className='upload-input'
-                type='file'
-                onChange={handleFileUpload}
-            />
             {file ? (
                 <div className='border'>
                     <h1>Status: {status}</h1>
@@ -145,19 +187,18 @@ function App() {
                     <h3>
                         Max Knee Angle: {response.max_knee_angle.toFixed(1)}°
                     </h3>
+                    <h3>
+                        Average 6 o'clock knee angle:{' '}
+                        {response.average_largest_knee_angles.toFixed(1)}°
+                    </h3>
+                    <p>(Calculated by averaging your 5 largest knee angles)</p>
                     <p>Frames Analyzed: {response.frames_analyzed}</p>
 
                     <img
                         src={response.image_base64}
+                        className='result-img'
                         alt='Max Angle Frame'
                         style={{ maxWidth: '100%', marginBottom: '1rem' }}
-                    />
-
-                    <video
-                        controls
-                        key={response.video_base64}
-                        src={response.video_base64}
-                        style={{ maxWidth: '100%' }}
                     />
                 </div>
             )}

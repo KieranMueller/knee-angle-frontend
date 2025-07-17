@@ -9,9 +9,26 @@
     --tan: #e2c391;
     --gray: #a8b7ab;
     --blue: #9bbec7;
+
+    /* Base background and surfaces */
+    --color-bg: #0d0d0d; /* Deep dark background */
+    --color-surface: #383838; /* Elevated card/panel surface */
+    --color-border: #2a2a2a; /* Subtle dividers */
+
+    /* Text */
+    --color-text-primary: #eaeaea; /* Primary text (light gray/white) */
+    --color-text-secondary: #b0b0b0; /* Secondary text (muted gray) */
+
+    /* Accent colors (use for highlights, buttons, links, graph lines, etc.) */
+    --color-accent-blue: #3fa9f5; /* Clean tech-blue */
+    --color-accent-green: #7ed957; /* Modern lime/green for confirmation/success */
+    --color-accent-red: #ff5c5c; /* Error/warning/highlight */
+    --color-accent-orange: #ff9f1c; /* Optional warm highlight */
+    --color-accent-purple: #a970ff; /* Optional creative/analytical vibe */
 }
 
 body {
+    background-color: var(--color-bg);
     margin: 0;
     font-family: 'MyRoboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     letter-spacing: 0.5px;
@@ -34,6 +51,7 @@ button {
 
 .upload-input {
     margin-bottom: 20px;
+    font-family: 'MyRoboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .border {
@@ -74,7 +92,7 @@ h4 {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border-left-color: #09f;
+    border-left-color: var(--color-text-secondary);
     animation: spin 1s linear infinite;
     /* margin: auto; */
 }
@@ -85,20 +103,9 @@ h4 {
     }
 }
 
-.green {
-    color: green;
-}
-
-.orange {
-    color: orange;
-}
-
-.red {
-    color: red;
-}
-
 .header {
-    background-color: var(--jasmine);
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
     padding: 25px;
     display: flex;
     justify-content: center;
@@ -114,18 +121,29 @@ h4 {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: var(--blue);
+    background-color: var(--color-surface);
     padding: 20px;
 }
 
+.top-content * {
+    color: var(--color-text-primary);
+}
+
 .upload-div {
-    border: 1px solid black;
     padding: 10px;
     border-radius: 10px;
-    background-color: var(--bistre);
-    color: rgb(245, 245, 245);
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.694);
-    animation: pulse 4s infinite;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    box-shadow: 10px 10px 10px rgba(92, 92, 92, 0.694);
+    animation: pulse 6s infinite;
+}
+
+.upload-btn {
+    background-color: var(--color-text-primary);
+    padding: 10px;
+    border-radius: 10px;
+    color: var(--color-bg);
+    font-family: 'MyRoboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 @keyframes pulse {
@@ -151,25 +169,29 @@ h4 {
     display: flex;
     justify-content: space-evenly;
     align-items: flex-start;
-    background-color: var(--tan);
+    background-color: var(--color-bg);
     padding: 20px;
+}
+
+.results * {
+    color: var(--color-text-primary);
 }
 
 .download-video-btn {
     margin-bottom: 5px;
-    background-color: var(--bistre);
+    background-color: var(--color-text-primary);
     padding: 10px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.483);
     border-radius: 10px;
 }
 
 .download-video-btn a {
-    font-family: 'MyRoboto';
-    color: white;
+    font-family: 'MyRoboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-bg);
 }
 
 .footer {
-    background-color: var(--gray);
+    background-color: var(--color-text-primary);
     padding: 10px;
     text-align: center;
     font-size: 1.5rem;
@@ -177,4 +199,16 @@ h4 {
 
 .footer img {
     width: 100px;
+}
+
+.green {
+    color: var(--color-accent-green);
+}
+
+.orange {
+    color: var(--color-accent-orange);
+}
+
+.red {
+    color: var(--color-accent-red);
 }

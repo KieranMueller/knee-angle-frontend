@@ -204,6 +204,7 @@ function App() {
                                 />
                             )}
                             <button
+                                className='upload-btn'
                                 disabled={
                                     !orientation ||
                                     !file ||

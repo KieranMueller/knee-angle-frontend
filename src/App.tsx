@@ -3,6 +3,8 @@ import { useState, type ChangeEvent } from 'react'
 import './App.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import sampleKneeAngleImg from './assets/sample_knee_angle.jfif'
+import sampleVideoAnalysis from './assets/L6_point_five_six_feet_portrait_analysis.mp4'
 
 type Status = null | 'Uploading...' | 'Success' | 'Error' | 'Awaiting Upload'
 type Advice = {
@@ -14,7 +16,6 @@ type BackendResponse = {
     average_largest_knee_angles: number
     frames_analyzed: number
     image_base64: string
-    video_filename: string
     advice: Advice
 }
 
@@ -22,12 +23,21 @@ function App() {
     const [file, setFile] = useState<File | null>(null)
     const [status, setStatus] = useState<Status>(null)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [response, setResponse] = useState<BackendResponse>()
+    const [response, setResponse] = useState<BackendResponse>({
+        max_knee_angle: 145.2,
+        average_largest_knee_angles: 144.8,
+        frames_analyzed: 499,
+        image_base64: sampleKneeAngleImg,
+        advice: {
+            'css-class': 'green',
+            content: 'Within Range',
+        },
+    })
     const [leg, setLeg] = useState<'left' | 'right' | null>(null)
     const [orientation, setOrientation] = useState<
         'portrait' | 'landscape' | null
     >(null)
-    const [videoUrl, setVideoUrl] = useState<string | null>(null)
+    const [videoUrl, setVideoUrl] = useState<string | null>(sampleVideoAnalysis)
 
     const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files![0]

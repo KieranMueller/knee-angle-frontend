@@ -246,7 +246,7 @@ function App() {
                                 </span>
                             </h3>
                             <h3>
-                                Average 6 o'clock knee angle:{' '}
+                                Average Knee Angle:{' '}
                                 <span className={response.advice['css-class']}>
                                     {response.average_largest_knee_angles.toFixed(
                                         1
@@ -258,8 +258,7 @@ function App() {
                                 {response.advice.content}
                             </h3>
                             <p>
-                                (Calculated by averaging your 5 largest knee
-                                angles)
+                                (Calculated by averaging 5 greatest knee angles)
                             </p>
                             <p>Frames Analyzed: {response.frames_analyzed}</p>
                             {videoUrl && (

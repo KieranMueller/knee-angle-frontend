@@ -60,6 +60,7 @@ button {
 
 .tips-div {
     max-width: 500px;
+    margin-right: 20px;
 }
 
 .tips-div li {
@@ -115,6 +116,10 @@ h4 {
 .header p {
     margin: 0;
     font-size: 2rem;
+}
+
+.author {
+    font-size: 16px;
 }
 
 .top-content {
@@ -177,6 +182,10 @@ h4 {
     color: var(--color-text-primary);
 }
 
+.result-data {
+    margin-right: 20px;
+}
+
 .download-video-btn {
     margin-bottom: 5px;
     background-color: var(--color-text-primary);
@@ -211,4 +220,27 @@ h4 {
 
 .red {
     color: var(--color-accent-red);
+}
+
+@media screen and (max-width: 700px) {
+    .top-content {
+        align-items: flex-start;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .top-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tips-div {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .author {
+        font-size: 14px;
+    }
 }
